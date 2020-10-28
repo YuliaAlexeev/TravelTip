@@ -2,11 +2,11 @@ import { mapService } from './services/mapService.js'
 
 var gMap;
 
-mapService.getLocs()
-    .then(locs => console.log('locs', locs))
+// mapService.getLocs()
+//     .then(locs => console.log('locs', locs))
 
 
-function onAskLocation(){
+function onAskLocation() {
     const elLocation = document.querySelector('input[name="location"]').value;
     mapService.askLocation(elLocation)
         .then(ans => {
@@ -24,7 +24,13 @@ function onAskLocation(){
             //TO DO ADD MODAL
             // alert('Please re-enter location');
         })
-        
+}
+
+function onMapClick(lat, lng, map) {
+    addMarker(lat, lng);
+    panTo(lat, lng);
+    var placeId = createPlace(lat, lng, name);
+    // renderPlacesList(placeId);
 }
 
 window.onload = () => {
@@ -47,11 +53,9 @@ window.onload = () => {
 
 
 document.querySelector('.go-btn').addEventListener('click', onAskLocation);
-
-
-    
-    
-
+document.querySelector('#map').addEventListener('click', (ev, map) => {
+    onMapClick(ev.latLng.lat(), ev.latLng.lng(), map);
+});
 
 
 export function initMap(lat = 32.0749831, lng = 34.9120554) {
@@ -68,19 +72,9 @@ export function initMap(lat = 32.0749831, lng = 34.9120554) {
         })
 }
 
-// function placeMarkerAndPanTo(latLng, map, title) {
-//     new google.maps.Marker({
-//         position: latLng,
-//         map: map,
-//         title: title,
-//     });
-//     map.panTo(latLng);
-// }
-
-
-function addMarker(loc) {
+function addMarker(lat, lng) {
     var marker = new google.maps.Marker({
-        position: loc,
+        position: { lat, lng },
         map: gMap,
         title: 'Hello World!'
     });
@@ -93,7 +87,6 @@ function panTo(lat, lng) {
     gMap.panTo(laLatLng);
 }
 
-
 function getPosition() {
     console.log('Getting Pos');
 
@@ -103,8 +96,8 @@ function getPosition() {
 }
 
 
-function getLocation(){
-    
+function getLocation() {
+
 }
 
 function _connectGoogleApi() {
