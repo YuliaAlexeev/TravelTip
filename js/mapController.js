@@ -1,10 +1,28 @@
 import { mapService } from './services/mapService.js'
 
 var gMap;
-console.log('Main!');
 
 mapService.getLocs()
     .then(locs => console.log('locs', locs))
+
+
+function onAskLocation(){
+    const elLocation = document.querySelector('input[name="location"]').value;
+    mapService.askLocation(elLocation)
+        .then(ans => {
+            console.log('Controller Got:', ans);
+            //TO DO REMOVE PREV MARKER
+            addMarker(ans);
+            panTo(ans);
+        })
+        .catch(err => {
+            console.log('Had Issues', err);
+
+            //TO DO ADD MODAL
+            alert('Please re-enter location');
+        })
+        
+}
 
 window.onload = () => {
     initMap()
@@ -24,10 +42,13 @@ window.onload = () => {
         })
 }
 
-document.querySelector('.btn').addEventListener('click', (ev) => {
-    console.log('Aha!', ev.target);
-    panTo(35.6895, 139.6917);
-})
+
+document.querySelector('.go-btn').addEventListener('click', onAskLocation);
+
+
+    
+    
+
 
 
 export function initMap(lat = 32.0749831, lng = 34.9120554) {
@@ -44,6 +65,16 @@ export function initMap(lat = 32.0749831, lng = 34.9120554) {
         })
 }
 
+// function placeMarkerAndPanTo(latLng, map, title) {
+//     new google.maps.Marker({
+//         position: latLng,
+//         map: map,
+//         title: title,
+//     });
+//     map.panTo(latLng);
+// }
+
+
 function addMarker(loc) {
     var marker = new google.maps.Marker({
         position: loc,
@@ -55,8 +86,10 @@ function addMarker(loc) {
 
 function panTo(lat, lng) {
     var laLatLng = new google.maps.LatLng(lat, lng);
+    // console.log(laLatLng)
     gMap.panTo(laLatLng);
 }
+
 
 function getPosition() {
     console.log('Getting Pos');
@@ -67,9 +100,13 @@ function getPosition() {
 }
 
 
+function getLocation(){
+    
+}
+
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
-    const API_KEY = ''; //TODO: Enter your API Key
+    const API_KEY = 'AIzaSyDGypLOJoL1NOMoJRqBiGsUZa7aRlA0Snk';
     var elGoogleApi = document.createElement('script');
     elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}`;
     elGoogleApi.async = true;
