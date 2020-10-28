@@ -1,12 +1,12 @@
 import { storageService } from '../storage-service.js';
-
+import {utils} from '../util-service.js'
 
 const STORAGE_KEY = 'placesData';
 var gPlacesData = createPlaces();
 
 function createPlace(lat, lng, name){
     return {
-        id: 1, 
+        id: utils.makeId(), 
         name, 
         lat, 
         lng, 
@@ -38,7 +38,6 @@ function setLocation(loc){
     console.log('loc', loc);
     storageService.saveToStorage(STORAGE_KEY, loc);
 }
-
 
 export const mapService = {
     getLocs,
