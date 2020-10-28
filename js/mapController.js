@@ -15,9 +15,6 @@ function onAskLocation() {
             addMarker(ans, elLocation);
             panTo(ans);
             mapService.setPlaceToStorage(ans)
-
-
-            // mapService.setLocation(ans);
             renderPlaces();
         })
     // .catch(err => {
@@ -53,16 +50,17 @@ function onMapClick(lat, lng, map) {
 }
 
 window.onload = () => {
+    document.querySelector('.go-btn').addEventListener('click', onAskLocation);
+    document.querySelector('.my-loc-btn').addEventListener('click', onMyLocationClick);
+
     initMap()
         .then(() => {
-
             addMarker({ lat: 32.0749831, lng: 34.9120554 });
         })
         .catch(console.log('INIT MAP ERROR'));
 
     getPosition()
         .then(pos => {
-
             console.log('User position is:', pos.coords);
         })
         .catch(err => {
@@ -71,13 +69,24 @@ window.onload = () => {
 }
 
 
-document.querySelector('.go-btn').addEventListener('click', onAskLocation);
-// document.querySelector('.my-loc-btn').addEventListener('click', onAskLocation);
+function getPosition() {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+    })
+}
 
+function onMyLocationClick() {
+    getPosition()
+        .then((pos => {
+            showLocation(pos);
+        }))
+}
 
-// window.navigator.geolocation
-//     .getCurrentPosition(console.log, console.log);
-
+function showLocation(pos) {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    panTo(lat, lng);
+}
 
 export function initMap(lat = 32.0749831, lng = 34.9120554) {
     return _connectGoogleApi()
@@ -108,19 +117,6 @@ function panTo(lat, lng) {
     gMap.panTo(laLatLng);
 }
 
-function getPosition() {
-    console.log('Getting Pos');
-
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject)
-    })
-}
-
-
-function getLocation() {
-
-}
-
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
     const API_KEY = 'AIzaSyDGypLOJoL1NOMoJRqBiGsUZa7aRlA0Snk';
@@ -134,6 +130,3 @@ function _connectGoogleApi() {
         elGoogleApi.onerror = () => reject('Google script failed to load')
     })
 }
-
-
-
