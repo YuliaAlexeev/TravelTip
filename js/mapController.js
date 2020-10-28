@@ -14,16 +14,37 @@ function onAskLocation() {
             //TO DO REMOVE PREV MARKER
             addMarker(ans);
             panTo(ans);
+            mapService.setPlaceToStorage(ans)
             
-            mapService.setLocation(ans);
             
+            // mapService.setLocation(ans);
+            renderPlaces();
         })
-        .catch(err => {
-            console.log('Had Issues', err);
+        // .catch(err => {
+        //     console.log('Had Issues', err);
 
-            //TO DO ADD MODAL
-            // alert('Please re-enter location');
-        })
+        //     //TO DO ADD MODAL
+        //     // alert('Please re-enter location');
+        // })
+}
+
+function renderPlaces(){
+   
+    let places = mapService.createPlaces();
+    console.log(places, 'places');
+    console.log(typeof places)
+
+    let htmlStrs = places.map(place => {
+        return `
+            <div class="location-item">
+                <button class="location-item-go-btn">Go</button>
+                <button class="location-item-delete-btn">X</button>
+                <p>${place.name}</p>
+            </div>`;
+    });
+
+    document.querySelector('.locations').innerHTML = htmlStrs.join('');
+    
 }
 
 function onMapClick(lat, lng, map) {
@@ -72,9 +93,9 @@ export function initMap(lat = 32.0749831, lng = 34.9120554) {
         })
 }
 
-function addMarker(lat, lng) {
+function addMarker(loc) {
     var marker = new google.maps.Marker({
-        position: { lat, lng },
+        position: loc,
         map: gMap,
         title: 'Hello World!'
     });

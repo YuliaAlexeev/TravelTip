@@ -2,7 +2,7 @@ import { storageService } from '../storage-service.js';
 import { utils } from '../util-service.js';
 
 const STORAGE_KEY = 'placesData';
-var gPlacesData = createPlaces();
+var gPlacesData = [];
 
 function createPlace(lat, lng, name) {
     return {
@@ -17,9 +17,13 @@ function createPlace(lat, lng, name) {
 }
 
 function createPlaces() {
-    let placesData =
-        storageService.loadFromStorage(STORAGE_KEY) || createPlace();
+    let placesData = storageService.loadFromStorage(STORAGE_KEY);
     return placesData;
+}
+
+function setPlaceToStorage(location){
+    gPlacesData.push(location)
+    storageService.saveToStorage(STORAGE_KEY,gPlacesData);
 }
 
 function askLocation(location) {
@@ -30,20 +34,23 @@ function askLocation(location) {
     const prmLoc = prmRes.then((res) => {
         console.log('res', res.data);
         const { lat, lng } = res.data.results[0].geometry.location;
-        return createPlace(lat, lng, res.data.results[0].formatted_address);
+        let place = createPlace(lat, lng, res.data.results[0].formatted_address);
+        console.log('place', place)
+       return place;
     });
     return prmLoc;
 }
 
-function setLocation(loc) {
-    console.log('loc', loc);
-    storageService.saveToStorage(STORAGE_KEY, loc);
-}
+// function setLocation(loc) {
+//     console.log('fffffff', loc);
+//     return loc;
+// }
 
 export const mapService = {
     getLocs,
     askLocation,
-    setLocation,
+    setPlaceToStorage,
+    createPlaces
 };
 
 var locs = [{ lat: 11.22, lng: 22.11 }];
