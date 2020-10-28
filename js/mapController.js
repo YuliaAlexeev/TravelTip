@@ -12,24 +12,23 @@ function onAskLocation() {
         .then(ans => {
             console.log('Controller Got:', ans);
             //TO DO REMOVE PREV MARKER
-            addMarker(ans);
+            addMarker(ans, elLocation);
             panTo(ans);
             mapService.setPlaceToStorage(ans)
-            
-            
+
+
             // mapService.setLocation(ans);
             renderPlaces();
         })
-        // .catch(err => {
-        //     console.log('Had Issues', err);
+    // .catch(err => {
+    //     console.log('Had Issues', err);
 
-        //     //TO DO ADD MODAL
-        //     // alert('Please re-enter location');
-        // })
+    //     //TO DO ADD MODAL
+    //     // alert('Please re-enter location');
+    // })
 }
 
-function renderPlaces(){
-   
+function renderPlaces() {
     let places = mapService.createPlaces();
     console.log(places, 'places');
     console.log(typeof places)
@@ -42,16 +41,15 @@ function renderPlaces(){
                 <p>${place.name}</p>
             </div>`;
     });
-
     document.querySelector('.locations').innerHTML = htmlStrs.join('');
-    
 }
 
 function onMapClick(lat, lng, map) {
-    addMarker(lat, lng);
+    mapService.setPlace(lat, lng);
+    const loc = { lat, lng };
+    addMarker(loc, name);
     panTo(lat, lng);
-    var placeId = createPlace(lat, lng, name);
-    // renderPlacesList(placeId);
+    renderPlaces();
 }
 
 window.onload = () => {
@@ -74,30 +72,32 @@ window.onload = () => {
 
 
 document.querySelector('.go-btn').addEventListener('click', onAskLocation);
-document.querySelector('#map').addEventListener('click', (ev, map) => {
-    onMapClick(ev.latLng.lat(), ev.latLng.lng(), map);
-});
+// document.querySelector('.my-loc-btn').addEventListener('click', onAskLocation);
+
+
+// window.navigator.geolocation
+//     .getCurrentPosition(console.log, console.log);
 
 
 export function initMap(lat = 32.0749831, lng = 34.9120554) {
-    console.log('InitMap');
     return _connectGoogleApi()
         .then(() => {
-            console.log('google available');
             gMap = new google.maps.Map(
                 document.querySelector('#map'), {
                 center: { lat, lng },
                 zoom: 15
             })
-            console.log('Map!', gMap);
-        })
+            gMap.addListener("click", (ev) => {
+                onMapClick(ev.latLng.lat(), ev.latLng.lng(), gMap);
+            })
+        });
 }
 
-function addMarker(loc) {
+function addMarker(loc, title) {
     var marker = new google.maps.Marker({
         position: loc,
         map: gMap,
-        title: 'Hello World!'
+        title
     });
     return marker;
 }

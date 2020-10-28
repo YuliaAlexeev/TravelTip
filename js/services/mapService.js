@@ -4,6 +4,14 @@ import { utils } from '../util-service.js';
 const STORAGE_KEY = 'placesData';
 var gPlacesData = [];
 
+function setPlace(lat, lng) {
+    name = prompt('Please enter current place\'s name');
+    var place = createPlace(lat, lng, name);
+    gPlacesData.unshift(place);
+    storageService.saveToStorage(STORAGE_KEY, gPlacesData);
+    // return place.id;
+}
+
 function createPlace(lat, lng, name) {
     return {
         id: utils.makeId(),
@@ -21,9 +29,9 @@ function createPlaces() {
     return placesData;
 }
 
-function setPlaceToStorage(location){
+function setPlaceToStorage(location) {
     gPlacesData.push(location)
-    storageService.saveToStorage(STORAGE_KEY,gPlacesData);
+    storageService.saveToStorage(STORAGE_KEY, gPlacesData);
 }
 
 function askLocation(location) {
@@ -36,7 +44,7 @@ function askLocation(location) {
         const { lat, lng } = res.data.results[0].geometry.location;
         let place = createPlace(lat, lng, res.data.results[0].formatted_address);
         console.log('place', place)
-       return place;
+        return place;
     });
     return prmLoc;
 }
@@ -50,7 +58,8 @@ export const mapService = {
     getLocs,
     askLocation,
     setPlaceToStorage,
-    createPlaces
+    createPlaces,
+    setPlace
 };
 
 var locs = [{ lat: 11.22, lng: 22.11 }];
