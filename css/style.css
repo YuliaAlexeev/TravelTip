@@ -1,5 +1,82 @@
-.locations{
-    background-color: lightblue;
-    width: 200px;
-    height: 200px;
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+body{
+    font-family: 'Open Sans', sans-serif;
+    color: #616161;
+}
+button{
+    cursor: pointer;
+}
+input{
+    outline: 0;
+}
+button, input{
+    padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    transition: all .3s ease;
+}
+.location-item {
+    background: #fa7f72;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+[name="location"]:focus{
+    background-color: #f9f6f6;
+    padding-right: 50px
+}
+.location-img {
+    width: 80px;
+    vertical-align: middle;
+}
+h1{
+    margin: 0;
+    padding: 0;
+}
+.header{
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #fa7f72;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.header button{
+    background-color: #fa7f72;
+    color: #fff;
+
+}
+.container{
+    max-width: 1000px;
+    margin: 0 auto;
+}
+input{
+    border: 1px solid #fa7f72;
+}
+
+@media (min-width: 700px){
+    .main{
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row-reverse;
+    }
+    .location-info{
+        width: 38%;
+        margin-right: 2%;
+    }
+    .map {
+        width: 70%;
+    }
+}
+
+@media (max-width: 699px){
+    .location-info{
+        width: 100%;
+    }
+    .map {
+        width: 100%;
+        margin-bottom: 20px;
+    }
 }
