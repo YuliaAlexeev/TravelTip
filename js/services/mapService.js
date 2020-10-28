@@ -1,3 +1,9 @@
+import { storageService } from '../storage-service.js';
+
+
+const STORAGE_KEY = 'placesData';
+var gPlacesData = createPlaces();
+
 function createPlace(lat, lng, name){
     return {
         id: 1, 
@@ -10,6 +16,11 @@ function createPlace(lat, lng, name){
     }
 }
 
+function createPlaces(){
+    let placesData = storageService.loadFromStorage(STORAGE_KEY) || createPlace();
+    return placesData;
+}
+
 function askLocation(location) {
     
     const prmRes = axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=AIzaSyDGypLOJoL1NOMoJRqBiGsUZa7aRlA0Snk`);
@@ -20,35 +31,21 @@ function askLocation(location) {
         return createPlace(lat, lng, res.data.results[0].formatted_address)
     });
     return prmLoc;
+    
+}
 
+function setLocation(loc){
+    console.log('loc', loc);
+    storageService.saveToStorage(STORAGE_KEY, loc);
 }
 
 
-
-
-// function onAddPlace(positionName, positionOnMap){
-//     let place =  createPlace(positionOnMap.lat, positionOnMap.lng, positionName);
-//     gUserData.places.push(place);
-//     _saveUserToStorage();
-// }
-
-// function removePlace(id){
-//     var placeIdx = gUserData.places.findIndex(place => id === place.id);
-//     gUserData.places.splice(placeIdx, 1)
-//     _saveUserToStorage();
-// }
-
-// function createPlaces(){
-//     let placesData = loadFromStorage(STORAGE_PLACES_KEY) || createPlace();
-//     return placesData;
-// }
-
-
-
 export const mapService = {
-    getLocs: getLocs,
-    askLocation: askLocation
+    getLocs,
+    askLocation,
+    setLocation
 };
+
 var locs = [{ lat: 11.22, lng: 22.11 }];
 
 function getLocs() {

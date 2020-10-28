@@ -14,12 +14,15 @@ function onAskLocation(){
             //TO DO REMOVE PREV MARKER
             addMarker(ans);
             panTo(ans);
+            
+            mapService.setLocation(ans);
+            
         })
         .catch(err => {
             console.log('Had Issues', err);
 
             //TO DO ADD MODAL
-            alert('Please re-enter location');
+            // alert('Please re-enter location');
         })
         
 }
