@@ -67,4 +67,3 @@ function getLocs() {
 //     gUserData.places.splice(placeIdx, 1)
 //     _saveUserToStorage();
 // }
-
