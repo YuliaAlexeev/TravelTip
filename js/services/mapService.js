@@ -1,22 +1,24 @@
-
-
-// function createPlace(lat, lng, name){
-//     return {
-//         id: makeId(), 
-//         name, 
-//         lat, 
-//         lng, 
-//         // weather, 
-//         // createdAt, 
-//         // updatedAt
-//     }
-// }
+function createPlace(lat, lng, name){
+    return {
+        id: 1, 
+        name, 
+        lat, 
+        lng, 
+        // weather, 
+        // createdAt, 
+        // updatedAt
+    }
+}
 
 function askLocation(location) {
     
     const prmRes = axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=AIzaSyDGypLOJoL1NOMoJRqBiGsUZa7aRlA0Snk`);
-  
-    const prmLoc = prmRes.then(res => {return res.data.results[0].geometry.location});
+    
+    const prmLoc = prmRes.then(res => {
+        console.log('res', res.data);
+        const { lat, lng } = res.data.results[0].geometry.location;
+        return createPlace(lat, lng, res.data.results[0].formatted_address)
+    });
     return prmLoc;
 
 }
